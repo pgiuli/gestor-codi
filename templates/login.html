@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Inicia Sessió</title>
+</head>
+<body>
+    <h1>Inici de Sessió</h1>
+        {% if error %}
+        <h2 class="warning">{{ error }}</h2>
+        {% endif %}
+    <form action="/login" method="post">
+        <label for="user_id">Usuari:</label>
+        <select name="user_id" required>
+            {% for user in users %}
+                <option value="{{ user[0] }}">{{ user[2] }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="password">Contrasenya:</label>
+        <input type="password" name="password" required>
+        <button type="submit">Inicia Sessió</button>
+    </form>
+
+</body>
+</html>

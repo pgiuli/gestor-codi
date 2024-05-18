@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ca">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/static/style.css">
+        <title>Gestor Trameses</title>
+    </head>
+    <body>
+        <header>
+            <p>Hola, {{current_user.display_name}}. <a href="/logout">Surt</a></p>
+        </header>
+        <h1>Consulta de tasca</h1>
+        {% if error %}
+        <h2 class="warning">{{ error }}</h2>
+        {% endif %}
+        
+        <form action="/consulta" method="post" enctype="multipart/form-data">
+
+            <label for="task_id">Tasca:</label>
+            <select name="task_id" required>
+                {% for task in tasks %}
+                    <option value="{{ task[0] }}">{{ task[1] }}</option>
+                {% endfor %}
+            </select>
+
+            {% if users %}
+            <label for="user_id">Usuari:</label>
+            <select name="user_id" required>
+                {% for user in users %}
+                    <option value="{{ user[0] }}">{{ user[2] }}</option>
+                {% endfor %}
+            {% endif %}
+            
+
+            <input type="hidden" name="user_id" value="{{ current_user.id }}">
+            <button type="submit">Descarrega</button>
+        </form>
+
+        <div class="btn-section"><a href="/dashboard">Torna</a></div>
+        
+    </body>
+</html>

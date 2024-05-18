@@ -1,0 +1,13 @@
+/bin
+/include
+/lib
+/lib64
+pyvenv.cfg
+
+/__pycache__
+
+.env
+trameses.db
+static/favicon.ico
+
+submissions.zip
