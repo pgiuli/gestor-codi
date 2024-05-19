@@ -151,6 +151,8 @@ def logout():
 @website.route('/descarrega')
 @login_required
 def download():
+    if not current_user.is_admin:
+        return redirect('/dashboard')
     with tempfile.TemporaryDirectory() as tempdir:
         submissions = db.get_submissions_without_data()
         for submission in submissions:
