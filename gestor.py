@@ -94,9 +94,6 @@ def task_status():
                 user_submission_status.append((user[0], task[0], f'✅ - {submission[3]}'))
             else:
                 user_submission_status.append((user[0], task[0], '❌'))
-    print(user_submission_status)
-    print(users)
-    print(tasks)
     return render_template('status.html', tasks=tasks, users=users, user_submission_status=user_submission_status, current_user=current_user)
 
 @website.route('/consulta', methods=['GET', 'POST'])
