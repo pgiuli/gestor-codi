@@ -1,0 +1,27 @@
+<nav class="nav">
+  <section>
+    <a class="link" href="/dashboard">
+      <h1 class="title">Programació i Robòtica</h1>
+    </a>
+  </section>
+
+  <section class="right-nav">
+    {% if current_user.is_authenticated %}
+    <div class="tooltip">
+      <span class="tooltiptext">{{current_user.display_name}}</span>
+      <img
+        class="avatar"
+        src="https://source.boringavatars.com/beam/120/{{current_user.display_name}}?colors=9d9f89,84af97,8bc59b,b2de93,ccee8d"
+        alt="Avatar"
+        class="avatar"
+      />
+    </div>
+    <span class="username">{{current_user.display_name}}</span>
+    <a class="logout" href="/logout">Sortir</a>
+    {% endif %}
+  </section>
+</nav>
+
+<script src="/static/js/theme.js"></script>
+
+<span id="toggle-theme"></span>

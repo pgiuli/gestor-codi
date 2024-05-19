@@ -1,0 +1,72 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("/static/css/buttons.css");
+@import url("/static/css/forms.css");
+@import url("/static/css/generated.css");
+
+:root {
+    --bg-color: #ffff;
+    --text-color-primary: #333;
+    --theme-toggle-bg: #212121;
+    --text-color-secondary: #777777;
+    --buton-color: #57cf5d;
+    --button-color-hover: #4ab54d;
+    --button-color-active: #3f9e41;
+    --button-color-text: #fff;
+    --shadow-container: 0 0 10px rgba(0, 0, 0, 0.1);
+    --table-border-color: #f2f2f2;
+}
+
+:root.dark {
+    --bg-color: #2e2e2e;
+    --text-color-primary: #f1f1f1;
+    --text-color-secondary: #ccc;
+    --theme-toggle-bg: #f1f1f1;
+    --shadow-container: 0 0 10px rgba(255, 255, 255, 0.035);
+    --table-border-color: #333;
+}
+
+:root {
+    background-color: var(--bg-color);
+    font-family: "Montserrat", "Lucida Sans", "Lucida Sans Regular", Geneva, Verdana, sans-serif;
+    color: var(--text-color-primary);
+}
+
+.tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    top: 70px;
+    transform: translateX(-25%);
+
+    position: absolute;
+    z-index: 1;
+}
+
+.shadow-container {
+    margin: 20px;
+    padding: 20px;
+    box-shadow: var(--shadow-container);
+    background-color: var(--bg-color);
+    border-radius: 10px;
+}
+
+.introduction {
+    color: var(--text-color-primary);
+}
+
+.warning {
+    color: #ff0000;
+    text-align: center;
+    font-weight: bold;
+}
+
+@media screen and (max-width: 600px) {
+    .tooltip:hover .tooltiptext {
+        transition: all 0.3s ease;
+        visibility: visible;
+    }
+}

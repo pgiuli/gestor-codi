@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html lang="ca">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/style.css">
-    <title>Gestor Trameses</title>
-</head>
-<body>
-    <header>
-        <p>Hola, {{current_user.display_name}}. <a href="/logout">Surt</a></p>
-    </header>
+{% extends "partials/base.html" %}
+
+{% block title %}Puntuar tramesa{% endblock %}
+
+{% block content %}
+
+<div class="shadow-container styled-form">
     <h1>Puntua una tramesa</h1>
         {% if error %}
         <h2 class="warning">{{ error }}</h2>
@@ -37,8 +32,9 @@
             <option value="AE">AE</option>
         </select>
 
-        <button type="submit">Puntua</button>
+        <button class="mt-1 button primary" type="submit">Puntua</button>
     </form>
+    <div class="button red mt-1"><a class="button-link" href="/dashboard">Torna</a></div>
+</div>
 
-</body>
-</html>
+{% endblock %}

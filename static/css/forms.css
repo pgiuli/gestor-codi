@@ -1,0 +1,40 @@
+.styled-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.styled-form form {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+}
+
+.styled-form form label {
+    margin-top: 10px;
+    color: var(--text-color-primary);
+}
+
+.styled-form form select,
+.styled-form form input {
+    padding: 10px;
+    border: 1px solid var(--text-color-secondary);
+    border-radius: 5px;
+}
+
+
+@media screen and (max-width: 1000px){
+    .styled-form form {
+        width: 80%;
+    }
+}
+
+
+
+@media screen and (max-width: 600px){
+    .styled-form form {
+        width: 100%;
+    }
+}
+

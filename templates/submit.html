@@ -1,34 +1,46 @@
-<!DOCTYPE html>
-<html lang="ca">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="/static/style.css">
-        <title>Gestor Trameses</title>
-    </head>
-    <body>
-        <header>
-            <p>Hola, {{current_user.display_name}}. <a href="/logout">Surt</a></p>
-        </header>
-        <h1>Entrega de tasca</h1>
-        
-        <form action="/enviament" method="post" enctype="multipart/form-data">
+{% extends "partials/base.html" %}
 
-            <label for="task_id">Tasca:</label>
-            <select name="task_id" required>
-                {% for task in tasks %}
-                    <option value="{{ task[0] }}">{{ task[1] }}</option>
-                {% endfor %}
-            </select>
+{% block title %}Entregar tasca{% endblock %}
 
-            <label for="file">Arxiu:</label>
+{% block content %}
 
-            <input type="file" name="file" accept=".py" required>
+<div class="shadow-container styled-form">
+    <h1>Entrega de tasca</h1>
 
-            <button type="submit">Entrega</button>
-        </form>
+    <form action="/enviament" method="post" enctype="multipart/form-data">
 
-        <div class="btn-section"><a href="/dashboard">Torna</a></div>
-        
-    </body>
-</html>
+        <label for="task_id">Tasca:</label>
+        <select name="task_id" required>
+            {% for task in tasks %}
+            <option value="{{ task[0] }}">{{ task[1] }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="file">Arxiu:</label>
+
+        <div class="flex w-full items-center justify-center">
+            <label htmlFor="dropzone-file"
+                class="flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-zinc-600 dark:bg-zinc-800 dark:hover:border-zinc-500 dark:hover:bg-zinc-800">
+                <div class="flex flex-col items-center justify-center pb-6 pt-5">
+                    <svg class="mb-4 h-8 w-8 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="{2}"
+                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                    </svg>
+                    <p id="dropzone-text" class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to
+                            upload</span> or drag and drop</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">.py Files only</p>
+                </div>
+                <input id="dropzone-file" class="hidden" type="file" name="file" accept=".py" required>
+            </label>
+        </div>
+        <button class="button primary mt-1" type="submit">Entrega</button>
+    </form>
+    <div class="button red mt-1"><a class="button-link" href="/dashboard">Torna</a></div>
+
+    <script src="/static/js/fileInput.js"></script>
+</div>
+
+</body>
+
+{% endblock %}

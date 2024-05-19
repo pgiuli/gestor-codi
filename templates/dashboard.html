@@ -1,29 +1,15 @@
-<!DOCTYPE html>
-<html lang="ca">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="/static/style.css">
-        <title>Gestor Trameses</title>
-    </head>
-    <body>
-        <header>
-            <p>Hola, {{current_user.display_name}}. <a href="/logout">Surt</a></p>
-        </header>
-            
-        <h1>Gestor de trameses de Programació i Robòtica</h1>
-        <h2>Utilitza aquesta pàgina per entregar les teves tasques.</h2>
+{% extends "partials/base.html" %}
 
-        <h3><a href="https://giuli.cat">Creat per: <span class="name">Pau Giuli</span></a></h3>
+{% block title %}Programació i Robòtica{% endblock %}
 
-        <div class="btn-section"><a href="/enviament">Envia una tasca</a></div>
-        <div class="btn-section"><a href="/estat">Comprova l'estat de les trameses</a></div>
-        <div class="btn-section"><a href="/consulta">Consulta una tramesa</a></div>
-        
-        
-        
+{% block content %}
+<div class="shadow-container">
+    <h1>Benvingut, {{current_user.display_name}}</h1>
+    <h2>Utilitza aquesta pàgina per gestionar les teves tasques.</h2>
+    
+    <a class="button primary" href="/enviament">Envia una tasca</a>
+    <a class="button primary" href="/estat">Comprova l'estat de les tasques</a>
+    <a class="button primary" href="/consulta">Consulta una tasca</a>
 
-        <div class="btn-section"><a href=https://github.com/pgiuli/gestor-trameses style="margin-top: 5vh;">GitHub Repository</a></div>
-        
-    </body>
-</html>
+</div>
+{% endblock %}
