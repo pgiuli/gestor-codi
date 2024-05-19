@@ -28,7 +28,7 @@
 
 footer {
     position: absolute;
-    bottom: 20px;
+    bottom: 0;
     width: calc(100% - 80px);
     z-index: 0;
 }
