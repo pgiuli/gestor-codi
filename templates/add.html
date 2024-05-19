@@ -1,0 +1,54 @@
+{% extends "partials/base.html" %}
+
+{% block title %}Crear Tasca/Usuari{% endblock %}
+
+{% block content %}
+
+<div class="shadow-container">
+    <div class="styled-form">
+        <h1>Crea una tasca</h1>
+        {% if error %}
+        <h2 class="warning">{{ error }}</h2>
+        {% endif %}
+    <form action="/add" method="post">
+        <label for="task_id">Identificador (ex_1):</label>
+        <input type="text" name="task_id" required>
+
+        <label for="task_name">Nom de la tasca:</label>
+        <input type="text" name="task_name" required>
+
+        <label for="description">Descripció de la tasca:</label>
+        <textarea name="description" required></textarea>
+
+        <input type="hidden" name="type" value="task">
+
+        <button class="mt-1 button primary" type="submit">Crea</button>
+    </form>
+    </div>
+
+    <div class="styled-form">
+        <h1>Afegeix un Usuari</h1>
+    <form action="/add" method="post">
+        <label for="user_id">Identificador (joeljoan):</label>
+        <input type="text" name="user_id" required>
+
+        <label for="display_name">Nom de l'usuari:</label>
+        <input type="text" name="display_name" required>
+
+        <label for="password">Contrasenya:</label>
+        <input type="password" name="password" required>
+
+
+        <input type="hidden" name="type" value="user">
+
+        <button class="mt-1 button primary" type="submit">Afegeix</button>
+    </form>
+
+    <div class="button red mt-1"><a class="button-link" href="/dashboard">Torna</a></div>
+    </div>
+    
+    
+
+</div>
+
+{% endblock %}

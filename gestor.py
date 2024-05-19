@@ -108,7 +108,8 @@ def query():
         submission = db.get_submission(user_id, task_id)
 
         if not submission:
-            return render_template('query.html', error="No s'ha trobat cap tramesa", current_user=current_user)
+            tasks = db.get_tasks()
+            return render_template('query.html', tasks=tasks, error="No s'ha trobat cap tramesa", current_user=current_user)
 
         else:
             temp = tempfile.NamedTemporaryFile(mode='w', delete=False)
@@ -119,6 +120,7 @@ def query():
         if current_user.is_admin:
             tasks = db.get_tasks()
             users = db.get_users()
+            users = [user for user in users if user[3] != '1']
             return render_template('query.html', tasks=tasks, users=users, current_user=current_user)
         else:
             tasks = db.get_tasks()
@@ -129,7 +131,12 @@ def query():
 def submission():
     if request.method == 'POST':
         file = request.files['file']
-        db.save_response(current_user.id, request.form['task_id'], file.read(), score='NQ')
+        print(f"{current_user.id} is submitting {request.form['task_id']}")
+        if not file:
+            return render_template('submit.html', error="No s\'ha seleccionat cap arxiu", current_user=current_user)
+        if db.get_task(request.form['task_id'])[2] == 0:
+            return render_template('submit.html', error="La tasca està tancada", current_user=current_user)
+        db.save_response(current_user.id, request.form['task_id'], file.read(), 'NQ')
         return redirect('/enviament')
     else:
         tasks = db.get_tasks()
@@ -170,9 +177,75 @@ def grade():
         return redirect('/puntua')
     else:
         users = db.get_users()
+        users = [user for user in users if user[3] != '1']
         tasks = db.get_tasks()
         return render_template('grade.html', users=users, tasks=tasks, current_user=current_user)
 
+@website.route('/gestio', methods=['GET'])
+@login_required
+def manage():
+    if not current_user.is_admin:
+        return redirect('/dashboard')
+    return render_template('manage.html', current_user=current_user)
+
+@website.route('/tasques', methods=['GET', 'POST'])
+@login_required
+def tasks():
+    if request.method == 'POST':
+        task_id = request.form['task_id']
+        task = db.get_task(task_id)
+        if task[2] == 1:
+            db.update_task(task_id, task[1], 0, task[3])
+        else:
+            db.update_task(task_id, task[1], 1, task[3])
+        return redirect('/tasques')
+    tasks = db.get_tasks()
+    return render_template('tasks.html', tasks=tasks, current_user=current_user)
+
+@website.route('/add', methods=['POST', 'GET'])
+@login_required
+def add():
+    if request.method == 'GET':
+        return render_template('add.html', current_user=current_user)
+    else:
+        if not current_user.is_admin:
+            return redirect('/dashboard')
+        type = request.form['type']
+        if type == 'task':
+            task_id = request.form['task_id']
+            task_name = request.form['task_name']
+            description = request.form['description']
+            if task_id in [task[0] for task in db.get_tasks()]:
+                return render_template('add.html', error='Ja existeix una tasca amb aquest ID', current_user=current_user)
+            db.add_task(task_id, task_name, description=description, open=1)
+        elif type == 'user':
+            user_id = request.form['user_id']
+            password = request.form['password']
+            display_name = request.form['display_name']
+            role = request.form['role']
+            if user_id in [user[0] for user in db.get_users()]:
+                return render_template('add.html', error='Ja existeix un usuari amb aquest ID', current_user=current_user)
+            db.add_user(user_id, password, display_name, role)
+        return redirect('/add')
+
+@website.route('/delete', methods=['POST', 'GET'])
+@login_required
+def delete():
+    if request.method == 'GET':
+        tasks = db.get_tasks()
+        users = db.get_users()
+        return render_template('delete.html', users=users, tasks=tasks, current_user=current_user)
+    else:
+        if not current_user.is_admin:
+            return redirect('/dashboard')
+        type = request.form['type']
+        if type == 'task':
+            task_id = request.form['task_id']
+            db.delete_task(task_id)
+        elif type == 'user':
+            user_id = request.form['user_id']
+            db.delete_user(user_id)
+        return redirect('/delete')
 
 @website.route('/favicon.ico')
 def favicon():

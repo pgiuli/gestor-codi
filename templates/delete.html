@@ -1,0 +1,49 @@
+{% extends "partials/base.html" %}
+
+{% block title %}Eliminar Tasca/Usuari{% endblock %}
+
+{% block content %}
+
+<div class="shadow-container">
+    <div class="styled-form">
+        <h1>Elimina una tasca</h1>
+        {% if error %}
+        <h2 class="warning">{{ error }}</h2>
+        {% endif %}
+    <form action="/delete" method="post">
+        <label for="task_id">Tasca:</label>
+        <select name="task_id">
+            {% for task in tasks %}
+                <option value="{{ task[0] }}">{{ task[1] }}</option>
+            {% endfor %}
+
+        <input type="hidden" name="type" value="task">
+
+        <button class="mt-1 button primary" type="submit">Elimina</button>
+    </form>
+    </div>
+
+    <div class="styled-form">
+        <h1>Elimina un Usuari</h1>
+    <form action="/delete" method="post">
+        <label for="user_id">Usuari:</label>
+        <select name="user_id">
+            {% for user in users %}
+                <option value="{{ user[0] }}">{{ user[2] }}</option>
+            {% endfor %}
+        </select>
+
+
+        <input type="hidden" name="type" value="user">
+
+        <button class="mt-1 button primary" type="submit">Elimina</button>
+    </form>
+
+    <div class="button red mt-1"><a class="button-link" href="/dashboard">Torna</a></div>
+    </div>
+    
+    
+
+</div>
+
+{% endblock %}

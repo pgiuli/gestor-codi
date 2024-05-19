@@ -1,0 +1,46 @@
+{% extends "partials/base.html" %}
+
+{% block title %}Estat de les tasques{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/stats.css" />
+{% endblock %}
+
+{% block content %}
+<div class="shadow-container">
+    <h1>Estat de les tasques</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Tasca</th>
+                <th>Descripció</th>
+                <th>Estat</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task[1] }}</td>
+                <td>{{ task[3] }}</td>
+                {% if current_user.is_admin %}
+                <td>
+                    <form action="/tasques" method="post">
+                        <input type="hidden" name="task_id" value="{{ task[0] }}" />
+                        <button class="button primary" type="submit">
+                            {% if task[2] == 1 %}Tancar{% else %}Obrir{% endif %}</button>
+                    </form>
+                </td>
+                {% else %}
+                {% if task[2] == 1 %}
+                <td>Oberta</td>
+                {% else %}
+                <td>Tancada</td>
+                {% endif %}
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="button red mt-1"><a class="button-link" href="/dashboard">Torna</a></div>
+</div>
+{% endblock %}

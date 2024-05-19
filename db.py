@@ -35,7 +35,7 @@ def save_response(user_id, task_id, response, score):
     conn = sqlite3.connect('trameses.db')
     c = conn.cursor()
     if get_submission(user_id, task_id):
-        c.execute('UPDATE trameses SET response=? WHERE user=? AND taskid=?', (response, user_id, task_id))
+        c.execute('UPDATE trameses SET response=?, score=? WHERE user=? AND taskid=?', (response, score, user_id, task_id))
     else:
         c.execute('INSERT INTO trameses VALUES (?, ?, ?, ?)', (user_id, task_id, response, score))
     conn.commit()
