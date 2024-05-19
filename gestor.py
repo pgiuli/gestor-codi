@@ -86,7 +86,18 @@ def task_status():
     #Remove admin from users
     users = [user for user in users if user[3] != '1']
     submissions = db.get_submissions_without_data()
-    return render_template('status.html', tasks=tasks, users=users, submissions=submissions, current_user=current_user)
+    user_submission_status = []
+    for user in users:
+        for task in tasks:
+            submission = db.get_submission(user[0], task[0])
+            if submission:
+                user_submission_status.append((user[0], task[0], f'✅ - {submission[3]}'))
+            else:
+                user_submission_status.append((user[0], task[0], '❌'))
+    print(user_submission_status)
+    print(users)
+    print(tasks)
+    return render_template('status.html', tasks=tasks, users=users, user_submission_status=user_submission_status, current_user=current_user)
 
 @website.route('/consulta', methods=['GET', 'POST'])
 @login_required

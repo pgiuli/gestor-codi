@@ -11,6 +11,7 @@
             <p>Hola, {{current_user.display_name}}. <a href="/logout">Surt</a></p>
         </header>
         <h1>Estat de les tasques</h1>
+        <h2 class="warning">Degut a un error en el codi, les trameses no s'estan mostrant correctament, disculpi les molèsties.</h2>
         <table>
             <thead>
                 <tr>
@@ -24,16 +25,10 @@
                 {% for user in users %}
                     <tr>
                         <td>{{ user[2] }}</td> <!-- user[2] is the user's display name -->
-                        {% for task in tasks %}
-                            <td>
-                                {% for submission in submissions %}
-                                    {% if submission[0] == user[0] and submission[1] == task[0] %} <!-- if there are submissions whose user is not in this user list it craps itself, i'm not going to fix it. -->
-                                    ✅ - {{ submission[2] }}
-                                    {% else %}
-                                    ❌
-                                    {% endif %}
-                                {% endfor %}
-                            </td>
+                        {% for status in user_submission_status %}
+                            {% if status[0] == user[0] %} <!-- status[0] is the user's id -->
+                                <td>{{ status[2] }}</td> <!-- status[2] is the submission status -->
+                            {% endif %}
                         {% endfor %}
                     </tr>
                 {% endfor %}
