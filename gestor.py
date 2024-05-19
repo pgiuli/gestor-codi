@@ -171,6 +171,8 @@ def download():
 @website.route('/puntua', methods=['POST', 'GET'])
 @login_required
 def grade():
+    if not current_user.is_admin:
+        return redirect('/dashboard')
     if request.method == 'POST':
         if current_user.is_admin:
             db.grade_submission(request.form['user_id'], request.form['task_id'], request.form['grade'])
