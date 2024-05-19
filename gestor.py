@@ -172,9 +172,11 @@ def download():
 @login_required
 def grade():
     if request.method == 'POST':
-        #Oops no check?
-        db.grade_submission(request.form['user_id'], request.form['task_id'], request.form['grade'])
-        return redirect('/puntua')
+        if current_user.is_admin:
+            db.grade_submission(request.form['user_id'], request.form['task_id'], request.form['grade'])
+            return redirect('/puntua')
+        else:
+            return redirect('/dashboard')
     else:
         users = db.get_users()
         users = [user for user in users if user[3] != '1']
