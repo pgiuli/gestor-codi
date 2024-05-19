@@ -1,39 +1,38 @@
-<!DOCTYPE html>
-<html lang="ca">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="/static/style.css">
-        <title>Gestor Trameses</title>
-    </head>
-    <body>
-        <header>
-            <p>Hola, {{current_user.display_name}}. <a href="/logout">Surt</a></p>
-        </header>
-        <h1>Estat de les tasques</h1>
-        <h2 class="warning">Degut a un error en el codi, les trameses no s'estan mostrant correctament, disculpi les molèsties.</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>User</th>
-                    {% for task in tasks %}
-                        <th>{{ task[1] }}</th> <!-- task[1] is the task name -->
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                    <tr>
-                        <td>{{ user[2] }}</td> <!-- user[2] is the user's display name -->
-                        {% for status in user_submission_status %}
-                            {% if status[0] == user[0] %} <!-- status[0] is the user's id -->
-                                <td>{{ status[2] }}</td> <!-- status[2] is the submission status -->
-                            {% endif %}
-                        {% endfor %}
-                    </tr>
+{% extends "partials/base.html" %}
+
+{% block title %}Estat de les tasques{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/stats.css" />
+{% endblock %}
+
+{% block content %}
+<div class="shadow-container">
+    <h1>Estat de les tasques</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Usuari</th>
+                {% for task in tasks %}
+                <th>{{ task[1] }}</th>
+                <!-- task[1] is the task name -->
                 {% endfor %}
-            </tbody>
-        </table>
-        <div class="btn-section"><a href="/dashboard">Torna</a></div>
-    </body>
-</html>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user[2] }}</td>
+                <!-- user[2] is the user's display name -->
+                {% for status in user_submission_status %} {% if status[0] == user[0] %}
+                <!-- status[0] is the user's id -->
+                <td>{{ status[2] }}</td>
+                <!-- status[2] is the submission status -->
+                {% endif %} {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="button red mt-1"><a class="button-link" href="/dashboard">Torna</a></div>
+</div>
+{% endblock %}
