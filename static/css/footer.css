@@ -27,7 +27,6 @@
 }
 
 footer {
-    position: absolute;
     bottom: 0;
     width: calc(100% - 80px);
     z-index: 0;
