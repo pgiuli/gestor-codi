@@ -1,0 +1,38 @@
+.button {
+  transition: color 0.3s ease;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 10px 20px;
+}
+
+.button-link {
+  text-decoration: none;
+  color: white;
+}
+
+.primary {
+  background-color: var(--buton-color);
+}
+
+.primary:hover {
+  background-color: var(--button-color-hover);
+}
+
+.red {
+  background-color: #f44336;
+}
+
+.red:hover {
+  background-color: #f44336;
+}
+
+.mt-1 {
+  margin-top: 1rem;
+}
