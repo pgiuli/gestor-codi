@@ -85,7 +85,7 @@ def task_status():
     users = db.get_users()
     #Remove admin from users
     users = [user for user in users if user[3] != '1']
-    submissions = db.get_submissions_whithout_data()
+    submissions = db.get_submissions_without_data()
     return render_template('status.html', tasks=tasks, users=users, submissions=submissions, current_user=current_user)
 
 @website.route('/consulta', methods=['GET', 'POST'])
@@ -137,7 +137,7 @@ def logout():
 @login_required
 def download():
     with tempfile.TemporaryDirectory() as tempdir:
-        submissions = db.get_submissions_whithout_data()
+        submissions = db.get_submissions_without_data()
         for submission in submissions:
             user_id = submission[0]
             task_id = submission[1]

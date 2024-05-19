@@ -145,7 +145,7 @@ def delete_user_submissions(user_id):
     conn.commit()
     conn.close()
 
-def get_submissions_whithout_data():
+def get_submissions_without_data():
     conn = sqlite3.connect('trameses.db')
     c = conn.cursor()
     c.execute('SELECT user, taskid, score FROM trameses')
