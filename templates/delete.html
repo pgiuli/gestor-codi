@@ -39,6 +39,24 @@
         <button class="mt-1 button primary" type="submit">Elimina</button>
     </form>
 
+        </div>
+
+    <div class="styled-form">
+        
+        <h1>Elimina un document</h1>
+
+    <form action="/delete" method="post">
+        <label for="doc_id">Document:</label>
+        <select name="doc_id">
+            {% for document in documents %}
+                <option value="{{ document[0] }}">{{ document[1] }}</option>
+            {% endfor %}
+        </select>
+
+        <input type="hidden" name="type" value="document">
+
+        <button class="mt-1 button primary" type="submit">Elimina</button>
+    </form>
     <div class="button red mt-1"><a class="button-link" href="/dashboard">Torna</a></div>
     </div>
     

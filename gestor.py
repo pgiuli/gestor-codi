@@ -7,10 +7,10 @@ import dotenv
 import tempfile
 import zipfile
 
-website = Flask(__name__)
+gestor = Flask(__name__)
 
 login_manager = LoginManager()
-login_manager.init_app(website)
+login_manager.init_app(gestor)
 login_manager.login_view = 'login'
 @login_manager.user_loader
 def load_user(user_id):
@@ -20,10 +20,9 @@ def load_user(user_id):
     return None
 
 dotenv.load_dotenv()
-website.secret_key = os.getenv('SECRET_KEY')
+gestor.secret_key = os.getenv('SECRET_KEY')
 
-website.config['MAX_CONTENT_LENGTH'] = 64 * 1024
-
+gestor.config['MAX_CONTENT_LENGTH'] = 64 * 1024
 
 class User(UserMixin):
     def __init__(self, user_id, password, display_name, role):
@@ -42,7 +41,7 @@ class User(UserMixin):
             return True
         return False
 
-@website.route('/')
+@gestor.route('/')
 def index():
     #If logged in, redirect to dashboard
     if current_user.is_authenticated:
@@ -50,7 +49,7 @@ def index():
     else:
         return redirect('/login')
 
-@website.route('/login', methods=['GET', 'POST'])
+@gestor.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         try_user_id = request.form['user_id']
@@ -70,7 +69,7 @@ def login():
         return render_template('login.html', users=available_users)
 
 
-@website.route('/dashboard')
+@gestor.route('/dashboard')
 @login_required
 def dashboard():
     if current_user.is_admin:
@@ -78,7 +77,7 @@ def dashboard():
     else:
         return render_template('dashboard.html', current_user=current_user)
     
-@website.route('/estat')
+@gestor.route('/estat')
 @login_required
 def task_status():
     tasks = db.get_tasks()
@@ -96,7 +95,7 @@ def task_status():
                 user_submission_status.append((user[0], task[0], '❌'))
     return render_template('status.html', tasks=tasks, users=users, user_submission_status=user_submission_status, current_user=current_user)
 
-@website.route('/consulta', methods=['GET', 'POST'])
+@gestor.route('/consulta', methods=['GET', 'POST'])
 @login_required
 def query():
     if request.method == 'POST':
@@ -126,7 +125,7 @@ def query():
             tasks = db.get_tasks()
             return render_template('query.html', tasks=tasks, current_user=current_user)
 
-@website.route('/enviament', methods=['GET', 'POST'])
+@gestor.route('/enviament', methods=['GET', 'POST'])
 @login_required
 def submission():
     if request.method == 'POST':
@@ -142,13 +141,13 @@ def submission():
         tasks = db.get_tasks()
         return render_template('submit.html', tasks=tasks, current_user=current_user)
 
-@website.route('/logout')
+@gestor.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect('/login')
 
-@website.route('/descarrega')
+@gestor.route('/descarrega')
 @login_required
 def download():
     if not current_user.is_admin:
@@ -170,7 +169,7 @@ def download():
                     zipf.write(os.path.join(root, file), arcname=os.path.relpath(os.path.join(root, file), tempdir))
     return send_file('submissions.zip', as_attachment=True)
 
-@website.route('/puntua', methods=['POST', 'GET'])
+@gestor.route('/puntua', methods=['POST', 'GET'])
 @login_required
 def grade():
     if not current_user.is_admin:
@@ -187,14 +186,14 @@ def grade():
         tasks = db.get_tasks()
         return render_template('grade.html', users=users, tasks=tasks, current_user=current_user)
 
-@website.route('/gestio', methods=['GET'])
+@gestor.route('/gestio', methods=['GET'])
 @login_required
 def manage():
     if not current_user.is_admin:
         return redirect('/dashboard')
     return render_template('manage.html', current_user=current_user)
 
-@website.route('/tasques', methods=['GET', 'POST'])
+@gestor.route('/tasques', methods=['GET', 'POST'])
 @login_required
 def tasks():
     if request.method == 'POST':
@@ -208,7 +207,7 @@ def tasks():
     tasks = db.get_tasks()
     return render_template('tasks.html', tasks=tasks, current_user=current_user)
 
-@website.route('/add', methods=['POST', 'GET'])
+@gestor.route('/add', methods=['POST', 'GET'])
 @login_required
 def add():
     if request.method == 'GET':
@@ -229,18 +228,30 @@ def add():
             password = request.form['password']
             display_name = request.form['display_name']
             role = request.form['role']
+            print(user_id, password, display_name, role)
             if user_id in [user[0] for user in db.get_users()]:
                 return render_template('add.html', error='Ja existeix un usuari amb aquest ID', current_user=current_user)
             db.add_user(user_id, password, display_name, role)
+        elif type == 'document':
+            print("a")
+            print(request.form)
+            doc_id = request.form['doc_id']
+            doc_name = request.form['doc_name']
+            document = request.files['document']
+            extension = document.filename.split('.')[-1]
+            if doc_id in [doc[0] for doc in db.get_documents_without_data()]:
+                return render_template('add.html', error='Ja existeix un document amb aquest ID', current_user=current_user)
+            db.add_document(doc_id, doc_name, document.read(), extension)
         return redirect('/add')
 
-@website.route('/delete', methods=['POST', 'GET'])
+@gestor.route('/delete', methods=['POST', 'GET'])
 @login_required
 def delete():
     if request.method == 'GET':
         tasks = db.get_tasks()
         users = db.get_users()
-        return render_template('delete.html', users=users, tasks=tasks, current_user=current_user)
+        documents = db.get_documents_without_data()
+        return render_template('delete.html', users=users, tasks=tasks, documents=documents, current_user=current_user)
     else:
         if not current_user.is_admin:
             return redirect('/dashboard')
@@ -251,19 +262,40 @@ def delete():
         elif type == 'user':
             user_id = request.form['user_id']
             db.delete_user(user_id)
+        elif type == 'document':
+            doc_id = request.form['doc_id']
+            db.delete_document(doc_id)
         return redirect('/delete')
 
-@website.route('/favicon.ico')
-def favicon():
-    return send_from_directory(os.path.join(website.root_path, 'static'), 'favicon.ico')
+@gestor.route('/documents')
+@login_required
+def documents():
+    #Downloads the document if it's present in the arguments of the request
+    if 'doc_id' in request.args:
+        doc_id = request.args['doc_id']
+        doc = db.get_document(doc_id)
+        extension = doc[3]
+        if doc:
+            temp = tempfile.NamedTemporaryFile(mode='w', delete=False)
+            temp.write(doc[2].decode())
+            temp.close()
+            return send_file(temp.name, as_attachment=True, download_name=f'{doc_id}.{extension}')
+        return redirect('/documents')
+    documents = db.get_documents_without_data()
+    return render_template('documents.html', documents=documents, current_user=current_user)
 
-@website.errorhandler(404)
+@gestor.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(gestor.root_path, 'static'), 'favicon.ico')
+
+@gestor.errorhandler(404)
 def page_not_found(e):
+    #print(f"{current_user.id} is trying to access a non-existent page: {request.path}")
     return redirect('/')
 
-@website.errorhandler(RequestEntityTooLarge)
+@gestor.errorhandler(RequestEntityTooLarge)
 def handle_file_size_exceeded(e):
     return redirect('https://youtu.be/dQw4w9WgXcQ')
 
 if __name__ == '__main__':
-    website.run(debug=True)
+    gestor.run(debug=True)

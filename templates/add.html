@@ -38,16 +38,39 @@
         <label for="password">Contrasenya:</label>
         <input type="password" name="password" required>
 
+        <label for="role">Rol:</label>
+        <select name="role" required>
+            <option value="0">Genèric</option>
+            <option value="1">Administrador</option>
+        </select>
 
         <input type="hidden" name="type" value="user">
 
         <button class="mt-1 button primary" type="submit">Afegeix</button>
     </form>
 
-    <div class="button red mt-1"><a class="button-link" href="/dashboard">Torna</a></div>
     </div>
-    
-    
+
+    <div class="styled-form">
+        <h1>Afegeix un document</h1>
+    <form action="/add" method="post" enctype="multipart/form-data">
+        <label for="doc_id">Identificador (ex_1):</label>
+        <input type="text" name="doc_id" required>
+
+        <label for="doc_name">Nom del document:</label>
+        <input type="text" name="doc_name" required>
+
+        <label for="doc">Selecciona un document:</label>
+        <input type="file" name="document" required>
+
+        <input type="hidden" name="type" value="document">
+
+        <button class="mt-1 button primary" type="submit">Afegeix</button>
+    </form>
+
+    <div class="button red mt-1"><a class="button-link" href="/dashboard">Torna</a></div>
+
+    </div> 
 
 </div>
 

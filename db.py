@@ -12,6 +12,9 @@ def create_database():
     # Create table for users
     c.execute('''CREATE TABLE IF NOT EXISTS users
         (user text, password text, displayname text, role text)''')
+    # Create table for documents
+    c.execute('''CREATE TABLE IF NOT EXISTS documents
+        (docid text, name text, document blob, extension text)''')
     conn.commit()
     conn.close()
 
@@ -169,5 +172,37 @@ def get_submission(user_id, task_id):
     conn.close()
     return submission
 
+def add_document(doc_id, name, document, extension):
+    conn = sqlite3.connect('trameses.db')
+    c = conn.cursor()
+    c.execute('INSERT INTO documents VALUES (?, ?, ?, ?)', (doc_id, name, document, extension))
+    conn.commit()
+    conn.close()
+
+def get_document(doc_id):
+    conn = sqlite3.connect('trameses.db')
+    c = conn.cursor()
+    c.execute('SELECT * FROM documents WHERE docid=?', (doc_id,))
+    document = c.fetchone()
+    conn.close()
+    return document
+
+def get_documents_without_data():
+    conn = sqlite3.connect('trameses.db')
+    c = conn.cursor()
+    c.execute('SELECT docid, name FROM documents')
+    documents = c.fetchall()
+    conn.close()
+    return documents
+
+def delete_document(doc_id):
+    conn = sqlite3.connect('trameses.db')
+    c = conn.cursor()
+    c.execute('DELETE FROM documents WHERE docid=?', (doc_id,))
+    conn.commit()
+    conn.close()
+
+
 if __name__ == '__main__':
     create_database()
+    add_user('deleteme', 'admin', 'Administrator', '1')

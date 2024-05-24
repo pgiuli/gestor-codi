@@ -1,0 +1,30 @@
+{% extends "partials/base.html" %}
+
+{% block title %}Estat de les tasques{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/stats.css" />
+{% endblock %}
+
+{% block content %}
+<div class="shadow-container">
+    <h1>Documents i Apunts</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Títol del document</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for document in documents %}
+            <tr>
+                <td>{{ document[1] }}</td>
+                <td><a href="/documents?doc_id={{ document[0] }}" class="button primary">Descarrega</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="button red mt-1"><a class="button-link" href="/dashboard">Torna</a></div>
+</div>
+{% endblock %}
