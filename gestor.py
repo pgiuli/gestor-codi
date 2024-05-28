@@ -111,8 +111,8 @@ def query():
             return render_template('query.html', tasks=tasks, error="No s'ha trobat cap tramesa", current_user=current_user)
 
         else:
-            temp = tempfile.NamedTemporaryFile(mode='w', delete=False)
-            temp.write(submission[2].decode())
+            temp = tempfile.NamedTemporaryFile(mode='wb', delete=False)
+            temp.write(submission[2])
             temp.close()
             return send_file(temp.name, as_attachment=True, download_name=f'{user_id}_{task_id}.py')
     else:
@@ -134,7 +134,7 @@ def submission():
         if not file:
             return render_template('submit.html', error="No s\'ha seleccionat cap arxiu", current_user=current_user)
         if db.get_task(request.form['task_id'])[2] == 0:
-            return render_template('submit.html', error="La tasca està tancada", current_user=current_user)
+            return render_template('submit.html', error="La tasca està tancada", current_user=current_user, tasks=db.get_tasks())
         db.save_response(current_user.id, request.form['task_id'], file.read(), 'NQ')
         return redirect('/enviament')
     else:
