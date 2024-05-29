@@ -84,7 +84,24 @@ def task_status():
     users = db.get_users()
     #Remove admin from users
     users = [user for user in users if user[3] != '1']
-    submissions = db.get_submissions_without_data()
+    average_grades = {}
+    grading = {
+        'NQ': 5,
+        'NA': 0,
+        'AS': 5,
+        'AN': 7.5,
+        'AE': 10
+    }
+    for user in users:
+        avg = 0
+        count = 0
+        for task in tasks:
+            submission = db.get_submission(user[0], task[0])
+            if submission:
+                avg += int(grading[submission[3]])
+            count += 1
+        avg /= count
+        average_grades[user[0]] = avg
     user_submission_status = []
     for user in users:
         for task in tasks:
@@ -93,7 +110,7 @@ def task_status():
                 user_submission_status.append((user[0], task[0], f'✅ - {submission[3]}'))
             else:
                 user_submission_status.append((user[0], task[0], '❌'))
-    return render_template('status.html', tasks=tasks, users=users, user_submission_status=user_submission_status, current_user=current_user)
+    return render_template('status.html', tasks=tasks, users=users, user_submission_status=user_submission_status, current_user=current_user, average_grades=average_grades, grading=grading)
 
 @gestor.route('/consulta', methods=['GET', 'POST'])
 @login_required
