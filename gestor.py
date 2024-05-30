@@ -293,8 +293,8 @@ def documents():
         doc = db.get_document(doc_id)
         extension = doc[3]
         if doc:
-            temp = tempfile.NamedTemporaryFile(mode='w', delete=False)
-            temp.write(doc[2].decode())
+            temp = tempfile.NamedTemporaryFile(mode='wb', delete=False)
+            temp.write(doc[2])
             temp.close()
             return send_file(temp.name, as_attachment=True, download_name=f'{doc_id}.{extension}')
         return redirect('/documents')
